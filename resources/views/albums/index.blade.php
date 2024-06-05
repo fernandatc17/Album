@@ -4,7 +4,7 @@
 <div class="d-flex justify-content-between  border-bottom mt-3  mb-3">   
 	<h2>Álbumes</h2>
 	<div >
-    	<a class="btn btn-primary" href="/albums/create">Nuevo</a>
+    	<a class="btn btn-primary" href="/albums/create">Nueva</a>
 	</div>
 </div>
 <table class="table">
