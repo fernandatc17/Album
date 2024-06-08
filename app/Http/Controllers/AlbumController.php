@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Album;
+use App\Models\User;
 
 class AlbumController extends Controller
 {
@@ -23,7 +24,9 @@ class AlbumController extends Controller
      */
     public function create()
     {
-        return view('albums/create');
+        $users = User::all(); //SELECT * FROM user
+        //Enviamos la varible $users a la vista  create.blade.php
+        return view('albums/create', compact('users'));
         // echo  "desde create";
     }
 
@@ -54,15 +57,25 @@ class AlbumController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $users = User::all();
+        $album= Album::find($id);// SELECT * FROM album WHERE id=$id
+        // dd($album);//Muestra el detalle de album a la vista albums/edit
+        // Enviamos las variables $album y $users a la vista edit.blade.php
+        return view('albums/edit', compact('album','users'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $album = Album::find($request->id);// SELECT * FROM album WHERE id=$id
+        //Asignamos al campo usuario_id 
+        $album ->usuario_id= $request->usuario ; //obtendremos el valor de la caja con name usuario
+        $album->album_nombre= $request->nombre ;
+        $album->album_descripcion= $request->descripcion;
+        $album->save();// Guardamos en la base de datos
+        return redirect('/albums');
     }
 
     /**
@@ -70,6 +83,12 @@ class AlbumController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try{
+            $album = Album::find($id);
+            $album->delete();
+            return redirect('/albums');
+        } catch(\Throwable $th){
+            return redirect('/albums')->with('error', 'No se puedo eliminar el registro');
+        }
     }
 }
